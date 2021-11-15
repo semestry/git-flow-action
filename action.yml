@@ -1,0 +1,22 @@
+name: 'Git Flow Action'
+description: 'GithHub Action for checking the base branch of a pull request.'
+inputs:
+  main_branch_pattern:
+    description: 'Main branch pattern'
+    required: true
+    default: '^(main|master)$'
+  development_branch_pattern:
+    description: 'Development branch pattern'
+    required: true
+    default: '^(dev|develop|development)$'
+  feature_branch_prefix:
+    description: 'Feature branch prefix'
+    required: true
+    default: 'feature/'
+  hotfix_branch_prefix:
+    description: 'Hotfix branch prefix'
+    required: true
+    default: 'hotfix/'
+runs:
+  using: 'node12'
+  main: 'index.js'
