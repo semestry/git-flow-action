@@ -23,7 +23,9 @@ You can then create the following workflow file in your repository.
 name: Check PR
 
 on:
-  pull_request:
+  # WARNING: Make sure to never check out, build or run untrusted code with the 'pull_request_target' event.
+  # See: https://docs.github.com/en/actions/learn-github-actions/events-that-trigger-workflows#pull_request_target
+  pull_request_target:
     types: [opened, edited]
 
 jobs:
