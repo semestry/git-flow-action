@@ -37,7 +37,7 @@ async function checkTargetBranch() {
             if (!isPullRequestDraft()) {
                 await convertPullRequestToDraft();
 
-                let msg = "This pull request was converted to a draft, because it targets another feature branch. After that branch has been merged, the base of this pull request will be updated automatically and you may mark ik ready for review again.";
+                let msg = "This pull request was converted to a draft, because it targets another feature branch. After that branch has been merged, the base of this pull request will be updated automatically and you may mark it ready for review again.";
                 console.log(msg);
                 await postComment(msg);
             }
