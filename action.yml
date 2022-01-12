@@ -1,6 +1,10 @@
 name: 'Git Flow Action'
 description: 'GithHub Action for checking the base branch of a pull request.'
 inputs:
+  app_id:
+    description: 'App ID of the Git Flow Action app'
+  private_key:
+    description: 'Private key of the Git Flow Action app'
   main_branch_pattern:
     description: 'Main branch pattern'
     required: true

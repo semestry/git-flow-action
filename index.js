@@ -1,7 +1,14 @@
 const core = require("@actions/core");
 const github = require("@actions/github");
 
-const octokit = getOctokit();
+const { graphql } = require("@octokit/graphql");
+const { Octokit: OctokitRest } = require("@octokit/rest");
+const { createAppAuth } = require("@octokit/auth-app");
+
+var octokitGraphQL = null;
+var octokitRest = null;
+
+console.log(github.context);
 
 async function run() {
     if (isTriggeredByPullRequestEvent()) {
@@ -101,19 +108,56 @@ function isPullRequestDraft() {
     return github.context.payload.pull_request.draft;
 }
 
-function getOctokit() {
-    let token = process.env.GITHUB_TOKEN;
-    if (token) {
-        return github.getOctokit(token);
-    } else {
-        throw "The GITHUB_TOKEN environment variable must be set.";
+async function ensureOctokitAvailable() {
+    if (octokitRest === null || octokitGraphQL == null) {
+        octokit = await initializeOctokit();
     }
 }
 
+async function initializeOctokit() {
+    let privateKey = core.getInput('private_key', { required: true });
+    let appId = parseInt(core.getInput('app_id', { required: true }));
+
+    let appOctokit = new OctokitRest({
+        authStrategy: createAppAuth,
+        auth: {
+            appId: appId,
+            privateKey: privateKey,
+        },
+    });
+
+    let installations = await appOctokit.apps.listInstallations();
+    let installationId = installations.data[0].id;
+
+    octokitRest = new OctokitRest({
+        authStrategy: createAppAuth,
+        auth: {
+            appId: appId,
+            privateKey: privateKey,
+            installationId: installationId,
+        },
+    });
+
+    octokitGraphQL = graphql.defaults({
+        request: {
+            hook: createAppAuth({
+                appId: appId,
+                privateKey: privateKey,
+                installationId: installationId,
+            }).hook,
+        },
+    });
+}
+
 async function convertPullRequestToDraft() {
+    await ensureOctokitAvailable();
+
     let pullRequestId = github.context.payload.pull_request.node_id;
 
-    await octokit.graphql(`
+    // Converting a PR to draft can only be done through the GraphQL API.
+    // But currently, that only seems to work with a personal access token (PAT).
+    // See: https://github.com/github/docs/issues/8925#issuecomment-970255180
+    await octokitGraphQL(`
         mutation {
             convertPullRequestToDraft(input: {pullRequestId: "${pullRequestId}"}) {
                 pullRequest {
@@ -125,13 +169,15 @@ async function convertPullRequestToDraft() {
 }
 
 async function postComment(comment) {
+    await ensureOctokitAvailable();
+
     let pr = github.context.payload.pull_request;
 
     let owner = pr.base.repo.owner.login;
     let repo = pr.base.repo.name;
     let prNumber = pr.number;
 
-    await octokit.rest.issues.createComment({
+    await octokitRest.issues.createComment({
         owner: owner,
         repo: repo,
         issue_number: prNumber,
