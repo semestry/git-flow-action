@@ -1,6 +1,6 @@
 {
   "name": "@semestry/git-flow-action",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "GithHub Action for checking the base branch of a pull request.",
   "main": "index.js",
   "repository": "https://github.com/semestry/git-flow-action",
