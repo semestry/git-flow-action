@@ -20,7 +20,7 @@ function isTriggeredByPullRequestEvent() {
     if (eventName === "pull_request" || eventName === "pull_request_target") {
         return true;
     }
-    
+
     core.setFailed("This action should only be used with 'pull_request' or 'pull_request_target' events.");
     return false;
 }
@@ -32,6 +32,8 @@ async function checkTargetBranch() {
     if (isFeatureBranch(head)) {
         if (isDevelopmentBranch(base)) {
             console.log("Head branch is a feature branch and targets a development branch.");
+        } else if (isSemestryTestingBranch(base)) {
+            console.log("Head branch is a feature branch and targets a Semestry version-test branch.");
         } else if (isFeatureBranch(base)) {
             console.log("Head branch is a feature branch and targets another feature branch.");
             if (!isPullRequestDraft()) {
@@ -53,6 +55,22 @@ async function checkTargetBranch() {
             console.log("Head branch is a hotfix branch and targets a main branch.");
         } else {
             let msg = "⛔ Pull requests for hotfix branches should target a development branch or a main branch.";
+            console.log(msg);
+            await postCommentIfBaseChanged(msg);
+        }
+    } else if (isFixBranch(head)) {
+        if (isSemestryTestingBranch(base)) {
+            console.log("Head branch is a fix branch and targets a Semestry version-test branch.");
+        } else {
+            let msg = "⛔ Pull requests for fix branches should target a version-test branch.";
+            console.log(msg);
+            await postCommentIfBaseChanged(msg);
+        }
+    } else if (isStagingBranch(head)) {
+        if (isSemestryStagingBranch(base)) {
+            console.log("Head branch is a staging branch and targets a Semestry version-staging branch.");
+        } else {
+            let msg = "⛔ Pull requests for staging branches should target a version-staging branch.";
             console.log(msg);
             await postCommentIfBaseChanged(msg);
         }
@@ -79,12 +97,28 @@ function getHotfixBranchPrefix() {
     return core.getInput("hotfix_branch_prefix", { required: true });
 }
 
+function getFixBranchPrefix() {
+    return core.getInput("fix_branch_prefix", { required: true });
+}
+
+function getStagingBranchPrefix() {
+    return core.getInput("staging_branch_prefix", { required: true });
+}
+
 function isFeatureBranch(branch) {
     return branch.startsWith(getFeatureBranchPrefix());
 }
 
 function isHotfixBranch(branch) {
     return branch.startsWith(getHotfixBranchPrefix());
+}
+
+function isFixBranch(branch) {
+    return branch.startsWith(getFixBranchPrefix());
+}
+
+function isStagingBranch(branch) {
+    return branch.startsWith(getStagingBranchPrefix());
 }
 
 function isMainBranch(branch) {
@@ -94,6 +128,16 @@ function isMainBranch(branch) {
 
 function isDevelopmentBranch(branch) {
     const pattern = core.getInput("development_branch_pattern", { required: true });
+    return new RegExp(pattern).test(branch);
+}
+
+function isSemestryStagingBranch(branch) {
+    const pattern = core.getInput("semestry_staging_branch_pattern", { required: true });
+    return new RegExp(pattern).test(branch);
+}
+
+function isSemestryTestingBranch(branch) {
+    const pattern = core.getInput("semestry_testing_branch_pattern", { required: true });
     return new RegExp(pattern).test(branch);
 }
 

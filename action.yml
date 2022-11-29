@@ -9,6 +9,14 @@ inputs:
     description: 'Development branch pattern'
     required: true
     default: '^(dev|develop|development)$'
+  semestry_staging_branch_pattern:
+    description: 'Semestry staging branch pattern'
+    required: true
+    default: '^([0-9]+(\.[0-9]+)+-staging|development-staging)$'
+  semestry_testing_branch_pattern:
+    description: 'Semestry Testing branch pattern'
+    required: true
+    default: '^([0-9]+(\.[0-9]+)+-test|development-test)$'
   feature_branch_prefix:
     description: 'Feature branch prefix'
     required: true
@@ -17,6 +25,14 @@ inputs:
     description: 'Hotfix branch prefix'
     required: true
     default: 'hotfix/'
+  fix_branch_prefix:
+    description: 'Fix branch prefix'
+    required: true
+    default: 'fix/'
+  staging_branch_prefix:
+    description: 'Staging branch prefix'
+    required: true
+    default: 'staging/'
 runs:
   using: 'node16'
   main: 'index.js'
