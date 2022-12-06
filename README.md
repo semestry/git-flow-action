@@ -11,7 +11,7 @@ It's feature are:
   Because pull requests for hotfix branches should never target other branches than these.
 
 - **Convert pull requests for cascading feature branches to draft automatically**<br>
-  This prevents them from being merged accendentally into the base feature branch.
+  This prevents them from being merged accidentally into the base feature branch.
 
 ## Usage
 
@@ -51,9 +51,14 @@ You can override configuration options using in the workflow file. For example:
           feature_branch_prefix: 'feat/'
 ```
 
-| Option                       | Description                                                                     |
-|------------------------------|---------------------------------------------------------------------------------|
-| `main_branch_pattern`        | Regex for matching main branches. Default: `^(main|master)$`                    |
-| `development_branch_pattern` | Regex for matching development branches. Default: `^(dev|develop|development)$` |                                                              |
-| `feature_branch_prefix`      | Feature branch prefix. Default: `feature/`                                      |
-| `hotfix_branch_prefix`       | Hotfix branch prefix. Default: `hotfix/`                                        |
+| Option                            | Description                                                                               |
+|-----------------------------------|-------------------------------------------------------------------------------------------|
+| `main_branch_pattern`             | Regex for matching main branches. Default: `^(main&#124;master)$`                         |
+| `development_branch_pattern`      | Regex for matching development branches. Default: `^(dev&#124;develop&#124;development)$` |
+| `semestry_staging_branch_pattern` | Regex for matching development branches. Default: `^(X.Y-staging&#124;X.Y.Z-staging)$`    |
+| `semestry_testing_branch_pattern` | Regex for matching development branches. Default: `^(X.Y-test&#124;X.Y.Z-test)$`          |
+| `feature_branch_prefix`           | Feature branch prefix. Default: `feature/`                                                |
+| `hotfix_branch_prefix`            | Hotfix branch prefix. Default: `hotfix/`                                                  |
+| `fix_branch_prefix`               | Fix branch prefix. Default `fix/`                                                         |
+| `staging_branch_prefix`           | Staging branch prefix. Default `staging/`                                                 |
+ 
