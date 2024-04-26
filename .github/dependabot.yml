@@ -4,3 +4,6 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    reviewers:
+      - "semestry/developers-nl"
+    open-pull-requests-limit: 15
