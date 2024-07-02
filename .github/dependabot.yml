@@ -5,5 +5,5 @@ updates:
     schedule:
       interval: "weekly"
     reviewers:
-      - "semestry/developers-nl"
+      - "semestry/mytimetable-developers"
     open-pull-requests-limit: 15
