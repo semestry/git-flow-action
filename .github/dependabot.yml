@@ -4,6 +4,4 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    reviewers:
-      - "semestry/mytimetable-developers"
     open-pull-requests-limit: 15
