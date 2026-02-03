@@ -7,7 +7,7 @@
   "author": "Erik van Paassen <erik@eveoh.nl>",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^2.0.2",
+    "@actions/core": "^3.0.0",
     "@actions/github": "^9.0.0"
   }
 }
