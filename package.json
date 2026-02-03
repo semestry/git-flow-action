@@ -3,6 +3,7 @@
   "version": "1.3.0",
   "description": "GithHub Action for checking the base branch of a pull request.",
   "main": "index.js",
+  "type": "module",
   "repository": "https://github.com/semestry/git-flow-action",
   "author": "Erik van Paassen <erik@eveoh.nl>",
   "license": "MIT",
